@@ -1,0 +1,24 @@
+{
+  "name": "fluxshield-backend",
+  "version": "1.0.0",
+  "description": "FluxShield — Adaptive API Traffic Intelligence Proxy",
+  "main": "update_server.js",
+  "scripts": {
+    "start": "node update_server.js",
+    "start:api": "node upstream_api.js",
+    "dev": "node --watch update_server.js",
+    "dev:api": "node --watch upstream_api.js",
+    "dev:all": "node upstream_api.js & node update_server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["api-proxy", "caching", "redis", "deduplication", "traffic"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.13.5",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "redis": "^5.11.0",
+    "socket.io": "^4.8.3"
+  }
+}

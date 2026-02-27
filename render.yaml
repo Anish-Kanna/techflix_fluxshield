@@ -1,0 +1,31 @@
+# Render.com Blueprint for FluxShield (2 services)
+services:
+  # 1. Upstream Product API (the real backend FluxShield protects)
+  - type: web
+    name: fluxshield-upstream-api
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: node upstream_api.js
+    envVars:
+      - key: PORT
+        value: 4000
+    healthCheckPath: /health
+
+  # 2. FluxShield Proxy (smart caching layer)
+  - type: web
+    name: fluxshield-proxy
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: node update_server.js
+    envVars:
+      - key: PORT
+        value: 3000
+      - key: REDIS_URL
+        sync: false
+      - key: CORS_ORIGIN
+        sync: false
+      - key: UPSTREAM_API
+        sync: false
+    healthCheckPath: /health
