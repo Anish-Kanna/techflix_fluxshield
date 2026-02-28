@@ -32,7 +32,11 @@ redis.on("ready", () => { redisConnected = true; });
 
 async function connectRedis() {
   try {
-    await redis.connect();
+    // Timeout after 5s so deployment doesn't hang if Redis is unreachable
+    const timeout = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error("Redis connection timeout (5s)")), 5000)
+    );
+    await Promise.race([redis.connect(), timeout]);
     redisConnected = true;
     console.log("✅ Connected to Redis at", REDIS_URL);
   } catch (err) {
@@ -342,12 +346,14 @@ process.on("SIGTERM", () => shutdown("SIGTERM"));
 process.on("SIGINT", () => shutdown("SIGINT"));
 
 async function start() {
-  await connectRedis();
-  server.listen(PORT, () => {
+  // Start HTTP server FIRST so Render detects the port immediately
+  server.listen(PORT, "0.0.0.0", () => {
     console.log(`🚀 FluxShield running on port ${PORT}`);
-    console.log(`   Redis: ${redisConnected ? "✅ connected" : "⚠️  offline (cache disabled)"}`);
-    console.log(`   Dashboard: http://localhost:${PORT}`);
   });
+
+  // Then connect Redis in the background (non-blocking)
+  await connectRedis();
+  console.log(`   Redis: ${redisConnected ? "✅ connected" : "⚠️  offline (cache disabled)"}`);
 }
 
 start();

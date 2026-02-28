@@ -126,7 +126,7 @@ app.post("/reset", (req, res) => {
   res.json({ message: "Stats reset" });
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`📦 Upstream Product API running on port ${PORT}`);
   console.log(`   Endpoints: /products, /products/:id, /categories, /stats, /health`);
 });

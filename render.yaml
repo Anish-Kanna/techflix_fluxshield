@@ -7,9 +7,6 @@ services:
     rootDir: backend
     buildCommand: npm install
     startCommand: node upstream_api.js
-    envVars:
-      - key: PORT
-        value: 4000
     healthCheckPath: /health
 
   # 2. FluxShield Proxy (smart caching layer)
@@ -20,8 +17,6 @@ services:
     buildCommand: npm install
     startCommand: node update_server.js
     envVars:
-      - key: PORT
-        value: 3000
       - key: REDIS_URL
         sync: false
       - key: CORS_ORIGIN
