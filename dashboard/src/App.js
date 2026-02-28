@@ -1,8 +1,6 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { io } from "socket.io-client";
 import {
-  LineChart,
-  Line,
   XAxis,
   YAxis,
   Tooltip,
