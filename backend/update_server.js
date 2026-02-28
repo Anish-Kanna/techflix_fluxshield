@@ -269,6 +269,11 @@ app.get(/^\/api\/(.*)/, async (req, res) => {
     return res.json(data);
   } catch (err) {
     errorCount++;
+    const elapsed = Date.now() - startTime;
+    totalResponseTime += elapsed;
+    allLatencies.push(elapsed);
+    if (allLatencies.length > 5000) allLatencies = allLatencies.slice(-5000);
+    addRequestLog("ERROR", elapsed);
     console.error("Proxy error:", err.message);
     res.status(500).json({ error: "Internal error" });
     emitMetricsThrottled();
